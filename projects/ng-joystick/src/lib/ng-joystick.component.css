@@ -1,0 +1,33 @@
+
+.joystickPad {
+    position: absolute;
+    opacity: 0.5;
+    display: block;
+    z-index: 999;
+    -moz-transition: opacity 250ms;
+    -o-transition: opacity 250ms;
+    transition: opacity 250ms;
+    -webkit-transition: opacity 250ms;
+}
+.back {
+    position: absolute;
+    opacity: 0.5;
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin-left: -50px;
+    margin-top: -50px;
+    background-color: red;
+    border-radius: 50%;
+}
+.front {
+    position: absolute;
+    opacity: 0.5;
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin-left: -25px;
+    margin-top: -25px;
+    background-color: red;
+    border-radius: 50%;
+}

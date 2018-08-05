@@ -121,6 +121,46 @@
           }
         }
       }
+    },
+    "ng-joystick": {
+      "root": "projects/ng-joystick",
+      "sourceRoot": "projects/ng-joystick/src",
+      "projectType": "library",
+      "prefix": "njk",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ng-joystick/tsconfig.lib.json",
+            "project": "projects/ng-joystick/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ng-joystick/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ng-joystick/src/test.ts",
+            "tsConfig": "projects/ng-joystick/tsconfig.spec.json",
+            "karmaConfig": "projects/ng-joystick/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ng-joystick/tsconfig.lib.json",
+              "projects/ng-joystick/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "ng-joystick-app"
