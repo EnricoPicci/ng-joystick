@@ -1,0 +1,19 @@
+
+language: node_js
+node_js:
+  - stable
+dist: trusty
+sudo: false
+
+cache:
+  directories:
+    - node_modules
+
+addons:
+  chrome: stable
+
+before_script:
+  - npm install -g @angular/cli
+
+script:
+  - ng test ng-joystick --browsers ChromeHeadless --watch false
