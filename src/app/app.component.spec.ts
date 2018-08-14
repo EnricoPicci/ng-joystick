@@ -247,12 +247,12 @@ describe('AppComponent', () => {
   it(`7 - move the pointer and make sure that up$,down$, right$, left$, planDirX$, planDirY$
         Observables emit correctly`, async(() => {
     let pointerEventInit: PointerEventInit;
-    let upEvent: JoystickEvent;
-    let downEvent: JoystickEvent;
-    let rightEvent: JoystickEvent;
-    let letfEvent: JoystickEvent;
-    let planDirXEvent: JoystickEvent;
-    let planDirYEvent: JoystickEvent;
+    let upEvent;
+    let downEvent;
+    let rightEvent;
+    let letfEvent;
+    let planDirXEvent;
+    let planDirYEvent;
     app.joystickComp.up$.subscribe(event => upEvent = event);
     app.joystickComp.down$.subscribe(event => downEvent = event);
     app.joystickComp.right$.subscribe(event => rightEvent = event);
