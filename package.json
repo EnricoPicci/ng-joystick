@@ -7,7 +7,10 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-library": "ng build ng-joystick --prod",
+    "build-app": "ng build ng-joystick-app --prod",
+    "build-all": "npm run build-library && npm run build-app"
   },
   "private": true,
   "dependencies": {
