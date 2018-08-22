@@ -10,7 +10,9 @@
     "e2e": "ng e2e",
     "build-library": "ng build ng-joystick --prod",
     "build-app": "ng build ng-joystick-app --prod",
-    "build-all": "npm run build-library && npm run build-app"
+    "build-all": "npm run build-library && npm run build-app",
+    "npm_publish": "cd dist/ng-joystick && npm publish",
+    "publish": "npm run build-library && npm run npm_publish"
   },
   "private": true,
   "dependencies": {
