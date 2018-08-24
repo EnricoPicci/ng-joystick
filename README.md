@@ -1,6 +1,10 @@
 [![Build Status](https://travis-ci.org/EnricoPicci/ng-joystick.svg?branch=master)](https://travis-ci.org/EnricoPicci/ng-joystick)
 
 
+[![Coverage Status](https://coveralls.io/repos/github/EnricoPicci/ng-joystick/badge.svg?branch=master)](https://coveralls.io/github/EnricoPicci/ng-joystick?branch=master)
+
+
+
 
 # NgJoystickApp
 

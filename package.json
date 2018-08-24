@@ -1,6 +1,6 @@
 {
   "name": "ng-joystick-app",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,11 +8,15 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-library": "ng build ng-joystick --prod",
+    "build-library": "if [ -d 'dist' ]; then rm -Rf dist; fi && ng build ng-joystick --prod",
     "build-app": "ng build ng-joystick-app --prod",
     "build-all": "npm run build-library && npm run build-app",
     "npm_publish": "cd dist/ng-joystick && npm publish",
-    "publish": "npm run build-library && npm run npm_publish"
+    "publish": "npm run build-library && cd dist/ng-joystick && npm publish",
+    "test-lib-headless": "ng test ng-joystick --browsers ChromeHeadlessNoSandbox --watch=false",
+    "test-app-headless": "ng test ng-joystick-app --browsers ChromeHeadlessNoSandbox --watch=false ",
+    "test-app-headless-coverage": "npm run test-app-headless-coverage --code-coverage",
+    "coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "private": true,
   "dependencies": {
@@ -30,19 +34,16 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular/compiler-cli": "^6.0.3",
-    "@angular-devkit/build-ng-packagr": "~0.6.8",
     "@angular-devkit/build-angular": "~0.6.8",
-    "ng-packagr": "^3.0.0-rc.2",
-    "tsickle": ">=0.25.5",
-    "tslib": "^1.7.1",
-    "typescript": "~2.7.2",
+    "@angular-devkit/build-ng-packagr": "~0.6.8",
     "@angular/cli": "~6.0.8",
+    "@angular/compiler-cli": "^6.0.3",
     "@angular/language-service": "^6.0.3",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
+    "coveralls": "^3.0.2",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~1.7.1",
@@ -50,9 +51,13 @@
     "karma-coverage-istanbul-reporter": "~2.0.0",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-packagr": "^3.0.0-rc.2",
     "protractor": "~5.3.0",
-    "ts-node": "~5.0.1",
-    "tslint": "~5.9.1"
+    "ts-node": "^5.0.1",
+    "tsickle": ">=0.25.5",
+    "tslib": "^1.7.1",
+    "tslint": "~5.9.1",
+    "typescript": "~2.7.2"
   },
   "repository": {
     "type": "git",
