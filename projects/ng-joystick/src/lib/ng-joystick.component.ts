@@ -127,7 +127,7 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
   private buildStream(element, eventName: string) {
     return fromEvent(element, eventName)
     .pipe(
-        tap(console.log),
+        // tap(console.log),
         map(event => this.prepareEvent(event)),
     );
   }
