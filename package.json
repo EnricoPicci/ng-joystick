@@ -16,7 +16,7 @@
     "test-lib-headless": "ng test ng-joystick --browsers ChromeHeadlessNoSandbox --watch=false",
     "test-app-headless": "ng test ng-joystick-app --browsers ChromeHeadlessNoSandbox --watch=false ",
     "test-app-headless-coverage": "ng test ng-joystick-app --browsers ChromeHeadlessNoSandbox --watch=false --code-coverage",
-    "coverage": "cat /coverage/lcov.info | coveralls"
+    "coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "private": true,
   "dependencies": {

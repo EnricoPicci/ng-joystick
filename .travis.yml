@@ -16,8 +16,10 @@ before_script:
   - npm install -g @angular/cli
 
 script:
-  - ng build ng-joystick --prod
-  - ng test ng-joystick --browsers ChromeHeadlessNoSandbox --watch false
+#  - ng build ng-joystick --prod
+#  - ng test ng-joystick --browsers ChromeHeadlessNoSandbox --watch false
+  - npm run build-library
+  - npm run test-lib-headless
   - npm run test-app-headless-coverage
   - npm run coverage
 
