@@ -15,8 +15,8 @@
     "publish": "npm run build-library && cd dist/ng-joystick && npm publish",
     "test-lib-headless": "ng test ng-joystick --browsers ChromeHeadlessNoSandbox --watch=false",
     "test-app-headless": "ng test ng-joystick-app --browsers ChromeHeadlessNoSandbox --watch=false ",
-    "test-app-headless-coverage": "npm run test-app-headless --code-coverage",
-    "coverage": "cat ./coverage/lcov.info | coveralls"
+    "test-app-headless-coverage": "ng test ng-joystick-app --browsers ChromeHeadlessNoSandbox --watch=false --code-coverage",
+    "coverage": "cat /coverage/lcov.info | coveralls"
   },
   "private": true,
   "dependencies": {
