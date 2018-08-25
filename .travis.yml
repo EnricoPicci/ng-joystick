@@ -19,5 +19,6 @@ script:
   - ng build ng-joystick --prod
   - ng test ng-joystick --browsers ChromeHeadlessNoSandbox --watch false
   - npm run test-app-headless-coverage
+  - npm run coverage
 
-after_success: npm run coverage
+# after_success: npm run coverage
