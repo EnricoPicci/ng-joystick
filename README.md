@@ -4,6 +4,28 @@
 [![Coverage Status](https://coveralls.io/repos/github/EnricoPicci/ng-joystick/badge.svg?branch=master)](https://coveralls.io/github/EnricoPicci/ng-joystick?branch=master)
 
 
+# Input APIs
+There some input properties offered as APIs which can be set as properties when using the component
+* @Input() position: {left: string, top: string};
+position is to be used to set the position of the ng-joystick component within the container which contains it
+* @Input() size = 100;
+The size of the joystick
+* @Input() threshold = 0.1;
+The minimal distance from previous point that the pointer/mouse has to have in order for a 'movement event' to be fired
+
+
+# Output APIs
+Some Observables are exposed as public APIs to the user of this component.
+Such Observables emit different movement related events which the user of the component may be interested in
+* joystickStart$ - emits when the pointer/mouse is clicked on the joystick handle to start the movement of the joystick
+* joystickMove$: Observable<JoystickEvent> - emits every movement of the joystick handle with the details of the point the handle moved to;
+* joystickRelease$: Observable<JoystickEvent> - emits when the pointer/mouse is released after have dragged the joystick handle with the details of the point where the pointer/mouse has been released
+* up$ - emits if the movement direction is up
+* down$ - emits if the movement direction is down
+* right$ - emits if the movement direction is right;
+* left$ - emits if the movement direction is left;
+* planDirX$ - emits 'right' or 'left' if the horizontal movement is right or left;
+* planDirY$ - emits 'up' or 'down' if the vertical movement is up or down;
 
 
 # NgJoystickApp
