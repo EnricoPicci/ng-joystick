@@ -47,11 +47,13 @@ const angle90 = Math.PI / 2;
   styleUrls: ['./ng-joystick.component.css']
 })
 export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
+  // Input APIs
   @Input() position: {left: string, top: string};
-  private startPosition: {x: number, y: number};
   @Input() size = 100;
-  maxDist = this.size / 2;
   @Input() threshold = 0.1;
+
+  private startPosition: {x: number, y: number};
+  private maxDist = this.size / 2;
   @ViewChild('joystickPad') private joystickPadElement: ElementRef;
   @ViewChild('joystickHandle') private handleElement: ElementRef;
   private handleNativeElement;
@@ -65,7 +67,7 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
   private directionY$ = new Subject<any>();
   private directionAngular$ = new Subject<any>();
 
-  // APIs
+  // Output APIs
   joystickStart$: Observable<any>;
   joystickMove$: Observable<JoystickEvent>;
   joystickRelease$: Observable<JoystickEvent>;

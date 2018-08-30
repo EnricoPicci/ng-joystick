@@ -1,6 +1,6 @@
 {
   "name": "ng-joystick-app",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-library": "if [ -d 'dist' ]; then rm -Rf dist; fi && ng build ng-joystick --prod",
+    "copy-readme": "cp README.md ./projects/ng-joystick",
+    "build-library": "npm run copy-readme && if [ -d 'dist' ]; then rm -Rf dist; fi && ng build ng-joystick --prod",
     "build-app": "ng build ng-joystick-app --prod",
     "build-all": "npm run build-library && npm run build-app",
     "npm_publish": "cd dist/ng-joystick && npm publish",
