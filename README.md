@@ -4,6 +4,17 @@
 [![Coverage Status](https://coveralls.io/repos/github/EnricoPicci/ng-joystick/badge.svg?branch=master)](https://coveralls.io/github/EnricoPicci/ng-joystick?branch=master)
 
 
+Angular library defining a virtual joystick component. Designed reactively and implemented with RxJS.
+
+# Demo
+* Clone the repository
+* Install all prerequisites with `cd ng-joystick && npm install`
+* Launch local development server with `ng serve`
+* Open a browser and type `localhost:4200`
+
+# Install
+```npm install ng-joystick```
+
 # Input APIs
 There some input properties offered as APIs which can be set as properties when using the component
 * @Input() position: {left: string, top: string};
@@ -26,6 +37,10 @@ Such Observables emit different movement related events which the user of the co
 * left$ - emits if the movement direction is left;
 * planDirX$ - emits 'right' or 'left' if the horizontal movement is right or left;
 * planDirY$ - emits 'up' or 'down' if the vertical movement is up or down;
+
+
+# Credit for Inspiration
+Inspired by [nipplejs](https://github.com/yoannmoinet/nipplejs) for the visual behavior - also some parts of code are taken from there. The core implementation has been re-written with reactive programming style and encapsulated in a Angular component.
 
 
 # NgJoystickApp

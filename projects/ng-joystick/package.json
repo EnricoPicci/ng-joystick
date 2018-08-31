@@ -1,8 +1,25 @@
 {
   "name": "ng-joystick",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
     "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EnricoPicci/ng-joystick.git"
+  },
+  "keywords": [
+    "joystick",
+    "observable",
+    "rxjs",
+    "reactivex",
+    "angular"
+  ],
+  "author": "Enrico",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EnricoPicci/ng-joystick/issues"
+  },
+  "homepage": "https://github.com/EnricoPicci/ng-joystick#readme"
 }
