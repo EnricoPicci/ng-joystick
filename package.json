@@ -1,6 +1,6 @@
 {
   "name": "ng-joystick-app",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -16,6 +16,7 @@
     "publish": "npm run build-library && cd dist/ng-joystick && npm publish",
     "test-lib-headless": "ng test ng-joystick --browsers ChromeHeadlessNoSandbox --watch=false",
     "test-app-headless": "ng test ng-joystick-app --browsers ChromeHeadlessNoSandbox --watch=false ",
+    "build-test-app-headless": "npm run build-library && npm run test-app-headless",
     "test-app-headless-coverage": "ng test ng-joystick-app --browsers ChromeHeadlessNoSandbox --watch=false --code-coverage",
     "coverage": "cat ./coverage/lcov.info | coveralls"
   },

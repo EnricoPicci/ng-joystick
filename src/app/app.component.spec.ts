@@ -108,10 +108,51 @@ describe('AppComponent', () => {
        }));
     }, timeOffsetForTest);
     // CONDITION CHECKED
-    // the pointerup event is undefined since joystickRelease$ does not emit
+    // the pointerup event is defined since joystickRelease$ has to emit
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
       expect(pointerUp).toBeDefined();
+    }, timeOffsetForTest);
+
+    // ==========   TEST 5.3  ===============
+    // pointerup after pointerdown, then pointer down outside the joystick handle and then pointerup
+    timeOffsetForTest = 200;
+    // EVENTS FIRED
+    // a pointerdown event is fired
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      joystickPad.nativeElement.dispatchEvent(new PointerEvent('pointerdown', {
+        pointerId: 1
+       }));
+    }, timeOffsetForTest);
+    // a pointerup event is fired
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      document.dispatchEvent(new PointerEvent('pointerup', {
+        pointerId: 1
+       }));
+    }, timeOffsetForTest);
+    // a pointerdown event is fired OUTSIDE THE JOYSTICK HANDLE so that the joystick is not activated
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      document.dispatchEvent(new PointerEvent('pointerdown', {
+        pointerId: 1
+       }));
+    }, timeOffsetForTest);
+    // a pointerup event is fired
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      // pointerup is reset to undefined
+      pointerUp = undefined;
+      document.dispatchEvent(new PointerEvent('pointerup', {
+        pointerId: 1
+       }));
+    }, timeOffsetForTest);
+    // CONDITION CHECKED
+    // the pointerup event is undefined since joystickRelease$ has not to emit the second time the pointer is UP
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      expect(pointerUp).toBeUndefined();
     }, timeOffsetForTest);
 
   }));

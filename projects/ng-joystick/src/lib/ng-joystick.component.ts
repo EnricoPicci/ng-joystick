@@ -2,7 +2,6 @@ import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef, Inject,
 import { DOCUMENT } from '@angular/common';
 
 import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { fromEvent } from 'rxjs';
 import { map, switchMap, takeUntil, tap, publishReplay, refCount, filter, take, distinctUntilChanged } from 'rxjs/operators';
@@ -63,9 +62,7 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private joystickMoveSubscription: Subscription;
 
-  private directionX$ = new Subject<any>();
-  private directionY$ = new Subject<any>();
-  private directionAngular$ = new Subject<any>();
+  private directionAngular$: Observable<any>;
 
   // Output APIs
   joystickStart$: Observable<any>;
@@ -75,8 +72,8 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
   down$: Observable<any>;
   right$: Observable<any>;
   left$: Observable<any>;
-  planDirX$ = this.directionX$.asObservable();
-  planDirY$ = this.directionY$.asObservable();
+  planDirX$: Observable<any>;
+  planDirY$: Observable<any>;
 
   constructor(@Inject(DOCUMENT) private document: any, private renderer: Renderer2) { }
 
@@ -114,12 +111,15 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
     // of the joystick on the UI
     this.joystickMoveSubscription = this.joystickMove$.subscribe();
 
+    this.planDirX$ = this.joystickMove$.pipe(map(joystickEvent => joystickEvent.direction.dirX));
+    this.planDirY$ = this.joystickMove$.pipe(map(joystickEvent => joystickEvent.direction.dirY));
+
+    this.directionAngular$ = this.joystickMove$.pipe(map(joystickEvent => joystickEvent.direction.angularDir));
     this.up$ = this.directionAngular$.pipe(distinctUntilChanged(), filter(d => d === 'up'));
     this.down$ = this.directionAngular$.pipe(distinctUntilChanged(), filter(d => d === 'down'));
     this.right$ = this.directionAngular$.pipe(distinctUntilChanged(), filter(d => d === 'right'));
     this.left$ = this.directionAngular$.pipe(distinctUntilChanged(), filter(d => d === 'left'));
 
-    // console.log('this.joystickPadElement', this.joystickPadElement);
   }
 
   ngOnDestroy() {
@@ -129,39 +129,47 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
   private buildStream(element, eventName: string) {
     return fromEvent(element, eventName)
     .pipe(
-        // tap(console.log),
         map(event => this.prepareEvent(event)),
     );
   }
 
-  // 'publishReplay' and 'refCount' ensure that there is only one subscription running
-  // which means that `setHandlePosition` is run only once independently on how many clients
-  // subscribe to this Observable
+  // Observable which notifies the position - it is shared
   private buildJoystickMove() {
     return this.joystickStart$
     .pipe(
-        tap(() => this.handlePressed()),
-        switchMap(
-            () => this.move$
-                .pipe(
-                    takeUntil(this.end$
-                        .pipe(
-                            tap(() => this.handleReleased())
-                        )
-                    ),
-                )
-        ),
+        tap(() => this.joystickActivated()),
+        switchMap(() => this.moveUntilJoystickReleased()),
         map(event => this.buildJoystickEvent(event)),
-        tap(event => this.setHandlePosition(event.clampedPos)),
+        tap(joystickEvent => this.showJoystickHandleInNewPosition(joystickEvent.clampedPos)),
+        // 'publishReplay' and 'refCount' ensure that there is only one subscription running
+        // which means that `setHandlePosition` is run only once independently on how many clients
+        // subscribe to this Observable
         publishReplay(1),
         refCount(),
     );
   }
+  private moveUntilJoystickReleased() {
+      return this.move$
+      .pipe(
+          takeUntil(this.end$
+              .pipe(
+                  tap(() => this.joystickReleased())
+              )
+          ),
+      );
+  }
   private buildJoystickRelease() {
     return this.joystickStart$
     .pipe(
+        // we need to take only one notification of end$ and then terminate because
+        // joystickRelease$ has to emit only once after the joystick has been activated by clicking on the handle
         switchMap(() => this.end$.pipe(take(1))),
         map(event => this.buildJoystickEvent(event)),
+        // 'publishReplay' and 'refCount' ensure that there is only one subscription running
+        // which means that `setHandlePosition` is run only once independently on how many clients
+        // subscribe to this Observable
+        publishReplay(1),
+        refCount(),
     );
   }
 
@@ -217,7 +225,7 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
     return moveEvent;
   }
 
-  private setHandlePosition(clampedPos) {
+  private showJoystickHandleInNewPosition(clampedPos) {
     const xPosition = Math.round((clampedPos.x - this.startPosition.x) * 100) / 100 + 'px';
     const yPosition = Math.round((clampedPos.y - this.startPosition.y) * 100) / 100 + 'px';
 
@@ -274,18 +282,14 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const newDirectionInfo = {dirX: directionX, dirY: directionY, angularDir: direction};
 
-    this.directionX$.next(newDirectionInfo.dirX);
-    this.directionY$.next(newDirectionInfo.dirY);
-    this.directionAngular$.next(newDirectionInfo.angularDir);
-
     return newDirectionInfo;
   }
 
-  private handlePressed() {
+  private joystickActivated() {
     this.renderer.removeStyle(this.handleNativeElement, 'transition');
   }
 
-  private handleReleased() {
+  private joystickReleased() {
     this.renderer.setStyle(this.handleNativeElement, 'transition', 'top 250ms, left 250ms');
     this.renderer.setStyle(this.handleNativeElement, 'left', '0px');
     this.renderer.setStyle(this.handleNativeElement, 'top', '0px');
