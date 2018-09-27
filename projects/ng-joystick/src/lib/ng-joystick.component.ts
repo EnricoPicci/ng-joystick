@@ -62,7 +62,7 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private joystickMoveSubscription: Subscription;
 
-  private directionAngular$: Observable<any>;
+  private planDirection$: Observable<any>;
 
   // Output APIs
   joystickStart$: Observable<any>;
@@ -114,11 +114,11 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
     this.planDirX$ = this.joystickMove$.pipe(map(joystickEvent => joystickEvent.direction.dirX));
     this.planDirY$ = this.joystickMove$.pipe(map(joystickEvent => joystickEvent.direction.dirY));
 
-    this.directionAngular$ = this.joystickMove$.pipe(map(joystickEvent => joystickEvent.direction.angularDir));
-    this.up$ = this.directionAngular$.pipe(distinctUntilChanged(), filter(d => d === 'up'));
-    this.down$ = this.directionAngular$.pipe(distinctUntilChanged(), filter(d => d === 'down'));
-    this.right$ = this.directionAngular$.pipe(distinctUntilChanged(), filter(d => d === 'right'));
-    this.left$ = this.directionAngular$.pipe(distinctUntilChanged(), filter(d => d === 'left'));
+    this.planDirection$ = this.joystickMove$.pipe(map(joystickEvent => joystickEvent.direction.planDir));
+    this.up$ = this.planDirection$.pipe(distinctUntilChanged(), filter(d => d === 'up'));
+    this.down$ = this.planDirection$.pipe(distinctUntilChanged(), filter(d => d === 'down'));
+    this.right$ = this.planDirection$.pipe(distinctUntilChanged(), filter(d => d === 'right'));
+    this.left$ = this.planDirection$.pipe(distinctUntilChanged(), filter(d => d === 'left'));
 
   }
 
@@ -140,6 +140,7 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
         tap(() => this.joystickActivated()),
         switchMap(() => this.moveUntilJoystickReleased()),
         map(event => this.buildJoystickEvent(event)),
+        filter(event => event.direction),
         tap(joystickEvent => this.showJoystickHandleInNewPosition(joystickEvent.clampedPos)),
         // 'publishReplay' and 'refCount' ensure that there is only one subscription running
         // which means that `setHandlePosition` is run only once independently on how many clients
@@ -236,7 +237,7 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
   private computeDirection(radianAngle) {
     let direction, directionX, directionY;
 
-    // Angular direction
+    // Plan direction
     //     \  UP /
     //      \   /
     // LEFT       RIGHT
@@ -280,7 +281,7 @@ export class NgJoystickComponent implements OnInit, AfterViewInit, OnDestroy {
         directionY = 'down';
     }
 
-    const newDirectionInfo = {dirX: directionX, dirY: directionY, angularDir: direction};
+    const newDirectionInfo = {dirX: directionX, dirY: directionY, planDir: direction};
 
     return newDirectionInfo;
   }

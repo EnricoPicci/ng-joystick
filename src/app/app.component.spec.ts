@@ -331,7 +331,7 @@ describe('AppComponent', () => {
       document.dispatchEvent(new PointerEvent('pointermove', pointerEventInit));
     }, timeOffsetForTest);
     // CONDITION CHECKED
-    // the pointerup event is undefined since joystickRelease$ does not emit
+    // the upEvent event is fired
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
       expect(upEvent).toBeTruthy();
@@ -342,9 +342,8 @@ describe('AppComponent', () => {
 
     // ==========   TEST 7.2  ===============
     // pointermove in the "down" direction
-    timeOffsetForTest = 100;
     // EVENTS FIRED
-    // a pointermove event in the "up quadrant" above the center of the joystik
+    // a pointermove event in the "down quadrant" below the center of the joystik
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
       upEvent = downEvent = rightEvent = letfEvent = planDirXEvent = planDirYEvent = null;
@@ -361,7 +360,7 @@ describe('AppComponent', () => {
       document.dispatchEvent(new PointerEvent('pointermove', pointerEventInit));
     }, timeOffsetForTest);
     // CONDITION CHECKED
-    // the pointerup event is undefined since joystickRelease$ does not emit
+    // the downEvent event is fired
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
       expect(downEvent).toBeTruthy();
@@ -372,9 +371,8 @@ describe('AppComponent', () => {
 
     // ==========   TEST 7.3  ===============
     // pointermove in the "right" direction
-    timeOffsetForTest = 200;
     // EVENTS FIRED
-    // a pointermove event in the "up quadrant" above the center of the joystik
+    // a pointermove event in the "right quadrant" right of the center of the joystik
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
       upEvent = downEvent = rightEvent = letfEvent = planDirXEvent = planDirYEvent = null;
@@ -391,7 +389,7 @@ describe('AppComponent', () => {
       document.dispatchEvent(new PointerEvent('pointermove', pointerEventInit));
     }, timeOffsetForTest);
     // CONDITION CHECKED
-    // the pointerup event is undefined since joystickRelease$ does not emit
+    // the rightEvent event is fired
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
       expect(rightEvent).toBeTruthy();
@@ -402,9 +400,8 @@ describe('AppComponent', () => {
 
     // ==========   TEST 7.4  ===============
     // pointermove in the "left" direction
-    timeOffsetForTest = 300;
     // EVENTS FIRED
-    // a pointermove event in the "up quadrant" above the center of the joystik
+    // a pointermove event in the "left quadrant" left of the center of the joystik
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
       upEvent = downEvent = rightEvent = letfEvent = planDirXEvent = planDirYEvent = null;
@@ -421,7 +418,7 @@ describe('AppComponent', () => {
       document.dispatchEvent(new PointerEvent('pointermove', pointerEventInit));
     }, timeOffsetForTest);
     // CONDITION CHECKED
-    // the pointerup event is undefined since joystickRelease$ does not emit
+    // the letfEvent event is fired
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
       expect(letfEvent).toBeTruthy();
@@ -455,8 +452,8 @@ describe('AppComponent', () => {
     // a pointermove event is fired within the area of the joystick
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
-      moveLeft = 1;
-      moveTop = 2;
+      moveLeft = 15;
+      moveTop = 25;
       pointerEventInit = {
         pointerId: 1,
         bubbles: true,
@@ -502,10 +499,145 @@ describe('AppComponent', () => {
     // the offset of the joystick handle is set to 10 since it is clamped
     timeOffsetForTest = timeOffsetForTest + 10;
     setTimeout(() => {
-      expect(joystickHandle.nativeElement.offsetLeft).toBe(10);
-      expect(joystickHandle.nativeElement.offsetTop).toBe(10);
+      expect(joystickHandle.nativeElement.offsetLeft).toBe(5);
+      expect(joystickHandle.nativeElement.offsetTop).toBe(5);
     }, timeOffsetForTest);
 
   }));
+
+  it(`9 - move the pointer just a little and make sure that up$,down$, right$, left$, planDirX$, planDirY$
+        Observables do not emit because the movement is below the threshold set`, async(() => {
+    const smallMovement = 1;
+    let pointerEventInit: PointerEventInit;
+    let upEvent;
+    let downEvent;
+    let rightEvent;
+    let letfEvent;
+    let planDirXEvent;
+    let planDirYEvent;
+    app.joystickComp.up$.subscribe(event => upEvent = event);
+    app.joystickComp.down$.subscribe(event => downEvent = event);
+    app.joystickComp.right$.subscribe(event => rightEvent = event);
+    app.joystickComp.left$.subscribe(event => letfEvent = event);
+    app.joystickComp.planDirX$.subscribe(event => planDirXEvent = event);
+    app.joystickComp.planDirY$.subscribe(event => planDirYEvent = event);
+
+    let timeOffsetForTest: number;
+    // a pointerdown event is fired to activate the joystick
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      joystickPad.nativeElement.dispatchEvent(new PointerEvent('pointerdown', {
+        pointerId: 1
+       }));
+    }, timeOffsetForTest);
+
+    // ==========   TEST 9.1  ===============
+    // pointermove in the "up" direction
+    timeOffsetForTest = 0;
+    // EVENTS FIRED
+    // a pointermove event in the "up quadrant" above the center of the joystik
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      upEvent = downEvent = rightEvent = letfEvent = planDirXEvent = planDirYEvent = null;
+      pointerEventInit = {
+        pointerId: 1,
+        bubbles: true,
+        cancelable: true,
+        pointerType: 'mouse',
+        width: 1,
+        height: 1,
+        clientX: initialJoystickPosX,
+        clientY: initialJoystickPosY - smallMovement,
+      };
+      document.dispatchEvent(new PointerEvent('pointermove', pointerEventInit));
+    }, timeOffsetForTest);
+    // CONDITION CHECKED
+    // no event is fired since the movement is below the threshold
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      expect(upEvent || downEvent || rightEvent || letfEvent || planDirXEvent || planDirYEvent).toBeFalsy();
+    }, timeOffsetForTest);
+
+    // ==========   TEST 9.2  ===============
+    // pointermove in the "down" direction
+    // EVENTS FIRED
+    // a pointermove event in the "down quadrant" below the center of the joystik
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      upEvent = downEvent = rightEvent = letfEvent = planDirXEvent = planDirYEvent = null;
+      pointerEventInit = {
+        pointerId: 1,
+        bubbles: true,
+        cancelable: true,
+        pointerType: 'mouse',
+        width: 1,
+        height: 1,
+        clientX: initialJoystickPosX,
+        clientY: initialJoystickPosY + smallMovement,
+      };
+      document.dispatchEvent(new PointerEvent('pointermove', pointerEventInit));
+    }, timeOffsetForTest);
+    // CONDITION CHECKED
+    // no event is fired since the movement is below the threshold
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      expect(upEvent || downEvent || rightEvent || letfEvent || planDirXEvent || planDirYEvent).toBeFalsy();
+    }, timeOffsetForTest);
+
+
+    // ==========   TEST 9.3  ===============
+    // pointermove in the "right" direction
+    // EVENTS FIRED
+    // a pointermove event in the "right quadrant" right of the center of the joystik
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      upEvent = downEvent = rightEvent = letfEvent = planDirXEvent = planDirYEvent = null;
+      pointerEventInit = {
+        pointerId: 1,
+        bubbles: true,
+        cancelable: true,
+        pointerType: 'mouse',
+        width: 1,
+        height: 1,
+        clientX: initialJoystickPosX + smallMovement,
+        clientY: initialJoystickPosY,
+      };
+      document.dispatchEvent(new PointerEvent('pointermove', pointerEventInit));
+    }, timeOffsetForTest);
+    // CONDITION CHECKED
+    // no event is fired since the movement is below the threshold
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      expect(upEvent || downEvent || rightEvent || letfEvent || planDirXEvent || planDirYEvent).toBeFalsy();
+    }, timeOffsetForTest);
+
+    // ==========   TEST 9.4  ===============
+    // pointermove in the "left" direction
+    // EVENTS FIRED
+    // a pointermove event in the "left quadrant" left of the center of the joystik
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      upEvent = downEvent = rightEvent = letfEvent = planDirXEvent = planDirYEvent = null;
+      pointerEventInit = {
+        pointerId: 1,
+        bubbles: true,
+        cancelable: true,
+        pointerType: 'mouse',
+        width: 1,
+        height: 1,
+        clientX: initialJoystickPosX - smallMovement,
+        clientY: initialJoystickPosY,
+      };
+      document.dispatchEvent(new PointerEvent('pointermove', pointerEventInit));
+    }, timeOffsetForTest);
+    // CONDITION CHECKED
+    // no event is fired since the movement is below the threshold
+    timeOffsetForTest = timeOffsetForTest + 10;
+    setTimeout(() => {
+      expect(upEvent || downEvent || rightEvent || letfEvent || planDirXEvent || planDirYEvent).toBeFalsy();
+    }, timeOffsetForTest);
+
+  }));
+
 
 });
