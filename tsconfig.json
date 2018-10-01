@@ -17,12 +17,12 @@
       "dom"
     ],
     "paths": {
-      "ng-joystick": [
-        "dist/ng-joystick"
-      ],
-      "ng-joystick/*": [
-        "dist/ng-joystick/*"
-      ]
+      // "ng-joystick": [
+      //   "dist/ng-joystick"
+      // ],
+      // "ng-joystick/*": [
+      //   "dist/ng-joystick/*"
+      // ]
     }
   }
 }
